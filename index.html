@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Calculadora de sapata isolada</title>
+<style>
+:root{--bg:#f6f7f9;--surf:#fff;--tx:#14171c;--mu:#6b7280;--ln:#e3e6ea;--ac:#2f5bea;--ok:#12805c;--bad:#c2362b;--okb:#e4f4ee;--badb:#fbe9e7;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#101216;--surf:#171a20;--tx:#e8eaee;--mu:#8b93a1;--ln:#2a2f38;--ac:#7b9bff;--ok:#4cc79b;--bad:#ff8a7e;--okb:#13281f;--badb:#2e1815;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#101216;--surf:#171a20;--tx:#e8eaee;--mu:#8b93a1;--ln:#2a2f38;--ac:#7b9bff;--ok:#4cc79b;--bad:#ff8a7e;--okb:#13281f;--badb:#2e1815;color-scheme:dark}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-variant-numeric:tabular-nums}
+main{max-width:1040px;margin:0 auto;padding:28px 18px 56px}
+h1{font-size:22px;font-weight:600;margin:0 0 4px;letter-spacing:-.01em}
+.sub{color:var(--mu);margin:0 0 26px}
+.grid{display:grid;grid-template-columns:minmax(0,340px) minmax(0,1fr);gap:28px;align-items:start}
+@media(max-width:820px){.grid{grid-template-columns:1fr}}
+fieldset{border:0;padding:0;margin:0 0 22px}
+legend{font-weight:600;font-size:13px;color:var(--mu);padding:0;margin-bottom:8px}
+.f{display:grid;grid-template-columns:1fr 104px;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid var(--ln)}
+.f.w{grid-template-columns:1fr;gap:6px}
+.f label{font-size:14px}.f small{color:var(--mu);margin-left:4px}
+input[type=number],select{width:100%;font:inherit;color:var(--tx);background:var(--surf);border:1px solid var(--ln);border-radius:8px;padding:7px 9px;text-align:right}
+.f.w select{text-align:left}
+input:focus,select:focus{outline:2px solid var(--ac);outline-offset:1px;border-color:transparent}
+input:disabled{opacity:.55}
+.chk{display:flex;gap:8px;align-items:center;font-size:13px;color:var(--mu);margin-top:8px}
+section.r{background:var(--surf);border:1px solid var(--ln);border-radius:12px;padding:16px 18px;margin-bottom:14px}
+.hd{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:6px}
+.hd h2{font-size:15px;font-weight:600;margin:0}
+.pill{font-size:12px;padding:2px 10px;border-radius:99px;font-weight:600}
+.pill.ok{background:var(--okb);color:var(--ok)}.pill.bad{background:var(--badb);color:var(--bad)}
+.row{display:flex;justify-content:space-between;gap:12px;padding:5px 0;font-size:14px}
+.row>span:first-child{color:var(--mu)}.row.bad>span:first-child,.row.bad b,.row.bad .big{color:var(--bad)}
+.row b{font-weight:600;text-align:right}
+.big{font-size:20px;color:var(--ac)}
+.note{font-size:12.5px;color:var(--mu);margin:8px 0 0}
+.eq{font-size:12.5px;color:var(--mu);margin:2px 0 6px}
+svg{width:100%;display:block}
+figure{margin:0}.cap{text-align:center;font-size:12px;color:var(--mu)}
+.dw{display:grid;grid-template-columns:1fr 1fr;gap:8px}@media(max-width:560px){.dw{grid-template-columns:1fr}}
+.pl{fill:none;stroke:var(--tx);stroke-width:1.5}.dm{stroke:var(--mu);stroke-width:.8;fill:none}.th{stroke:var(--mu);stroke-width:.7;fill:none}.tx{font-size:9px;fill:var(--mu)}
+.bar{background:var(--surf);border:1px solid var(--ln);border-radius:12px;padding:12px 14px;margin:0 0 22px;display:grid;gap:8px}
+.br{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.br>span{font-size:13px;color:var(--mu);min-width:110px}
+.br select,.br input[type=text]{flex:1 1 140px;min-width:0;text-align:left;font:inherit;color:var(--tx);background:var(--surf);border:1px solid var(--ln);border-radius:8px;padding:7px 9px}
+button{font:inherit;font-size:13px;color:var(--tx);background:var(--surf);border:1px solid var(--ln);border-radius:8px;padding:7px 12px;cursor:pointer}
+button:hover{border-color:var(--ac)}button.p{background:var(--ac);border-color:var(--ac);color:#fff}button.d{color:var(--bad)}
+#msg{font-size:12.5px;color:var(--mu);min-height:18px}
+.un{display:flex;gap:14px;font-size:13px;color:var(--mu);padding:6px 0;align-items:center}.un label{display:flex;gap:6px;align-items:center}
+details{font-size:12.5px;color:var(--mu);padding:6px 0}summary{cursor:pointer;color:var(--ac)}details p{margin:6px 0 0}
+</style>
+</head>
+<body>
+<main>
+<h1>Sapata isolada com dois momentos fletores</h1>
+<p class="sub">Altere os valores à esquerda e o cálculo se atualiza na hora. Unidades: kgf, cm e kgf/cm². Para um único momento, deixe o outro em zero.</p>
+<div class="bar">
+<div class="br"><span>Empreendimento</span><select id="empSel"></select><input type="text" id="empName" placeholder="Nome do novo empreendimento"><button id="empAdd" class="p">Criar</button><button id="empDel" class="d">Excluir</button></div>
+<div class="br"><span>Sapata</span><select id="sapSel"></select><input type="text" id="sapName" placeholder="Nome da sapata (ex.: P1)"><button id="sapSave" class="p">Salvar</button><button id="sapDel" class="d">Excluir</button></div>
+<div id="msg">Carregando…</div>
+</div>
+<div class="grid">
+<div>
+<fieldset><legend>Cargas e solo</legend>
+<div class="un">Unidade das cargas: <label><input type="radio" name="un" value="kgf" checked> kgf</label><label><input type="radio" name="un" value="tf"> tf</label></div>
+<div class="f"><label>Carga normal Nk<small class="uf">kgf</small></label><input type="number" id="N" value="11200" step="any"></div>
+<div class="f"><label>Momento Mx (excentricidade no lado A)<small class="um">kgf·m</small></label><input type="number" id="Mx" value="500" step="any"></div>
+<div class="f"><label>Momento My (excentricidade no lado B)<small class="um">kgf·m</small></label><input type="number" id="My" value="300" step="any"></div>
+<div class="f"><label>Tensão admissível<small>kgf/cm²</small></label><input type="number" id="sadm" value="2" step="any"></div>
+<div class="f"><label>Fator f: σ máx ≤ f·σ adm</label><input type="number" id="fk" value="1" step="any"></div>
+<details><summary>O que é o fator f?</summary><p>É quanto a tensão máxima (canto mais carregado) pode passar da tensão admissível do solo. Use <b>f = 1,0</b> como padrão: carga permanente ou quando não há orientação específica. <b>f = 1,3</b> costuma ser aceito quando o momento vem de ação temporária, como vento, desde que a tensão média continue ≤ σ adm. Confirme com seu professor ou geotécnico.</p></details>
+</fieldset>
+<fieldset><legend>Pilar</legend>
+<div class="f"><label>Lado a (paralelo a A)<small>cm</small></label><input type="number" id="a" value="30" step="any"></div>
+<div class="f"><label>Lado b (paralelo a B)<small>cm</small></label><input type="number" id="b" value="14" step="any"></div>
+</fieldset>
+<fieldset><legend>Sapata</legend>
+<div class="f"><label>Lado A<small>cm</small></label><input type="number" id="A" value="110" step="any"></div>
+<label class="chk"><input type="checkbox" id="autoA"> A automático: menor A (múltiplo de 5 cm) que passa nas tensões</label>
+<div class="note" id="autoNote"></div>
+<div class="f"><label>Lado B<small>cm</small></label><input type="number" id="B" value="95" step="any"></div>
+<label class="chk"><input type="checkbox" id="auto" checked> B automático: A − a + b, arredondado para 5 cm</label>
+<div class="f"><label>Altura H<small>cm</small></label><input type="number" id="H" value="45" step="any"></div>
+<div class="f"><label>Altura da borda h₀<small>cm</small></label><input type="number" id="h0" value="15" step="any"></div>
+<div class="f"><label>Cobrimento d’<small>cm</small></label><input type="number" id="dl" value="4" step="any"></div>
+</fieldset>
+<fieldset><legend>Aço e concreto</legend>
+<div class="f"><label>fyk<small>MPa</small></label><input type="number" id="fyk" value="500" step="any"></div>
+<div class="f"><label>Bitola φ<small>mm</small></label><select id="phi"><option>5.0</option><option selected>6.3</option><option>8.0</option><option>10.0</option><option>12.5</option><option>16.0</option><option>20.0</option></select></div>
+<div class="f"><label>fck do concreto<small>MPa</small></label><input type="number" id="fck" value="25" step="any"></div>
+<div class="f"><label>Taxa mínima ρmín<small>%</small></label><input type="number" id="rho" value="0.15" step="any"></div>
+<label class="chk"><input type="checkbox" id="usemin" checked> Considerar armadura mínima (ρmín · 100 cm · H)</label>
+</fieldset>
+<fieldset><legend>Critério dos momentos (CEB-70)</legend>
+<div class="f w"><select id="crit"><option value="media" selected>Tensão média na largura (igual à apostila com 1 momento)</option><option value="borda">Borda mais carregada (conservador)</option></select></div>
+</fieldset>
+</div>
+<div id="out"></div>
+</div>
+<p class="note">Roteiro: tensões no solo, altura, balanços, momentos pelo CEB-70, armaduras, ancoragem e biela. A armadura mínima usa a taxa informada em “Aço e concreto”.</p>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+const ids=['N','Mx','My','sadm','fk','a','b','A','B','H','h0','dl','fyk','phi','fck','rho'];
+const n=(x,d=2)=>isFinite(x)?x.toLocaleString('pt-BR',{minimumFractionDigits:d,maximumFractionDigits:d}):'—';
+const pill=(ok,t1,t2)=>`<span class="pill ${ok?'ok':'bad'}">${ok?t1:t2}</span>`;
+const row=(l,v)=>`<div class="row"><span>${l}</span><b>${v}</b></div>`;
+const chk=(l,v,ok)=>`<div class="row ${ok?'':'bad'}"><span>${l}</span><b>${v} ${pill(ok,'Passa','Não passa')}</b></div>`;
+const card=(t,p,body)=>`<section class="r"><div class="hd"><h2>${t}</h2>${p||''}</div>${body}</section>`;
+
+function plan(A,B,a,b,H,h0,eA,eB,sm,sn,ok){
+  const T=(x,y,t,an)=>`<text class="tx" x="${x}" y="${y}" text-anchor="${an||'middle'}">${t}</text>`;
+  const hd=(x1,x2,y,t)=>`<path class="dm" d="M${x1} ${y}H${x2}M${x1} ${y-3}V${y+3}M${x2} ${y-3}V${y+3}"/>`+T((x1+x2)/2,y+11,t);
+  const vd=(x,y1,y2,t)=>`<path class="dm" d="M${x} ${y1}V${y2}M${x-3} ${y1}H${x+3}M${x-3} ${y2}H${x+3}"/><text class="tx" transform="translate(${x+4} ${(y1+y2)/2}) rotate(90)" text-anchor="middle">${t}</text>`;
+  const CA=(A-a)/2, CB=(B-b)/2;
+  let s=Math.min(250/A,180/B);
+  const W=A*s,Hh=B*s,x0=12+(250-W)/2,y0=12+(180-Hh)/2,x1=x0+W,y1=y0+Hh,cx=x0+W/2,cy=y0+Hh/2,pw=a*s,ph=b*s;
+  const ex=Math.max(-W/2,Math.min(W/2,eA*s)), ey=Math.max(-Hh/2,Math.min(Hh/2,eB*s));
+  const p=`<svg viewBox="0 0 320 250" role="img" aria-label="Planta da sapata">`+
+   `<path d="M${cx-W/6} ${cy}L${cx} ${cy-Hh/6}L${cx+W/6} ${cy}L${cx} ${cy+Hh/6}Z" fill="var(--ac)" fill-opacity=".1" stroke="var(--ac)" stroke-width=".8"/>`+
+   `<path class="th" d="M${x0} ${y0}L${cx-pw/2} ${cy-ph/2}M${x1} ${y0}L${cx+pw/2} ${cy-ph/2}M${x0} ${y1}L${cx-pw/2} ${cy+ph/2}M${x1} ${y1}L${cx+pw/2} ${cy+ph/2}"/>`+
+   `<rect class="pl" x="${x0}" y="${y0}" width="${W}" height="${Hh}"/>`+
+   `<rect x="${cx-pw/2}" y="${cy-ph/2}" width="${pw}" height="${ph}" fill="var(--mu)" fill-opacity=".35" stroke="var(--tx)"/>`+
+   `<circle cx="${cx+ex}" cy="${cy+ey}" r="3.5" fill="${ok?'var(--ok)':'var(--bad)'}"/>`+
+   hd(x0,cx-pw/2,y1+14,n(CA,0))+hd(cx-pw/2,cx+pw/2,y1+14,n(a,0))+hd(cx+pw/2,x1,y1+14,n(CA,0))+hd(x0,x1,y1+32,'A = '+n(A,0))+
+   vd(x1+12,y0,cy-ph/2,n(CB,0))+vd(x1+12,cy-ph/2,cy+ph/2,n(b,0))+vd(x1+12,cy+ph/2,y1,n(CB,0))+vd(x1+30,y0,y1,'B = '+n(B,0))+'</svg>';
+  s=Math.min(250/A,90/H);
+  const W2=A*s,X0=12+(250-W2)/2,X1=X0+W2,Cx=X0+W2/2,yb=140,yt=yb-H*s,yh=yb-h0*s,hp=a*s,k1=26,k0=sm>0?Math.max(0,k1*sn/sm):0,pt=Math.max(10,yt-30);
+  const c=`<svg viewBox="0 0 320 250" role="img" aria-label="Corte da sapata">`+
+   `<rect x="${Cx-hp/2}" y="${pt}" width="${hp}" height="${yt-pt}" fill="var(--mu)" fill-opacity=".35" stroke="var(--tx)"/>`+
+   `<path class="pl" d="M${X0} ${yb}H${X1}V${yh}L${Cx+hp/2} ${yt}H${Cx-hp/2}L${X0} ${yh}Z" style="fill:var(--surf)"/>`+
+   `<path d="M${X0} ${yb}H${X1}V${yb+k1}L${X0} ${yb+k0}Z" fill="var(--ac)" fill-opacity=".18" stroke="var(--ac)" stroke-width="1"/>`+
+   T(X0,yb+k0+11,'σmín '+n(sn),'start')+T(X1,yb+k1+11,'σmáx '+n(sm),'end')+
+   hd(X0,Cx-hp/2,yb+46,n(CA,0))+hd(Cx-hp/2,Cx+hp/2,yb+46,n(a,0))+hd(Cx+hp/2,X1,yb+46,n(CA,0))+hd(X0,X1,yb+64,'A = '+n(A,0))+
+   vd(X1+12,yh,yb,'h₀ '+n(h0,0))+vd(X1+30,yt,yb,'H '+n(H,0))+'</svg>';
+  return `<div class="dw"><figure>${p}<figcaption class="cap">Planta</figcaption></figure><figure>${c}<figcaption class="cap">Corte na direção A: tensões médias no solo (kgf/cm²)</figcaption></figure></div><p class="note">Planta: o losango azul é o núcleo central e o ponto é a resultante da carga. Cotas em cm.</p>`;
+}
+
+function autoA(){
+  const v=i=>parseFloat($(i).value),U=document.querySelector('input[name=un]:checked').value==='tf'?1000:1;
+  const N=v('N')*U,mx=Math.abs(v('Mx'))*U,my=Math.abs(v('My'))*U,sadm=v('sadm'),fk=v('fk'),a=v('a'),b=v('b');
+  if(![N,mx,my,sadm,fk,a,b].every(isFinite)||N<=0||sadm<=0||a<=0)return;
+  const ba=$('auto').checked,B0=v('B'),eA=mx*100/(N*1.1),eB=my*100/(N*1.1);
+  for(let A=Math.ceil(a/5)*5;A<=1000;A+=5){
+    const B=ba?Math.ceil((A-a+b)/5)*5:B0;if(!(B>0))return;
+    const k=1.1*N/(A*B);
+    if(eA/A+eB/B<=1/6&&k*(1+6*eA/A+6*eB/B)<=fk*sadm&&k<=sadm){
+      $('A').value=A;$('autoNote').textContent='A = '+A+' cm é o menor múltiplo de 5 que passa nas tensões do solo (núcleo central, σ máx e σ média). As demais verificações aparecem ao lado.';return}
+  }
+  $('autoNote').textContent='Não encontrei um A até 10 m que passe. Revise cargas, σ adm, f ou B.';
+}
+function calc(){
+  if($('autoA').checked)autoA();else $('autoNote').textContent='';
+  if($('auto').checked){const A=+$('A').value,a=+$('a').value,b=+$('b').value;
+    if(isFinite(A+a+b))$('B').value=Math.ceil((A-a+b)/5)*5;}
+  $('B').disabled=$('auto').checked;$('A').disabled=$('autoA').checked;
+  const g={};ids.forEach(i=>g[i]=parseFloat($(i).value));
+  const crit=$('crit').value;
+  const U=document.querySelector('input[name=un]:checked').value==='tf'?1000:1;
+  const {sadm,fk,a,b,A,B,H,h0,dl,fyk,phi,fck,rho}=g, N=g.N*U;
+  if(ids.some(i=>!isFinite(g[i])||(g[i]<0&&i!='Mx'&&i!='My'))||N<=0||A<=0||B<=0||H<=0){
+    $('out').innerHTML=card('Preencha todos os campos',null,'<p class="note">Os resultados aparecem quando todos os valores forem válidos.</p>');return;}
+  const mx=Math.abs(g.Mx)*U, my=Math.abs(g.My)*U;
+  let h='';
+  // 1) tensões no solo
+  const eA=mx*100/(N*1.1), eB=my*100/(N*1.1), k=1.1*N/(A*B), u=6*eA/A, w=6*eB/B;
+  const sm=k*(1+u+w), sn=k*(1-u-w), c1=k*(1+u-w), c2=k*(1-u+w);
+  const core=eA/A+eB/B<=1/6, okS1=sm<=fk*sadm, okS2=k<=sadm, okA=core&&okS1&&okS2;
+  h+=card('1. Tensões no solo',pill(okA,'Passa','Não passa'),
+    `<p class="eq">eA = Mx/(1,1·N) · eB = My/(1,1·N) · σ = 1,1·N/(A·B)·(1 ± 6eA/A ± 6eB/B)</p>`+
+    row('Excentricidades eA / eB',n(eA)+' / '+n(eB)+' cm')+
+    chk('Núcleo central: eA/A + eB/B ≤ 1/6 (0,167)',n(eA/A+eB/B,3),core)+
+    chk('σ máxima ≤ f·σ adm ('+n(fk*sadm)+')',`<span class="big">${n(sm)}</span> kgf/cm²`,okS1)+
+    row('σ mínima',n(sn)+' kgf/cm²')+row('σ nos outros dois cantos',n(c1)+' / '+n(c2)+' kgf/cm²')+
+    chk('σ média ≤ σ adm ('+n(sadm)+')',n(k)+' kgf/cm²',okS2)+
+    (!core?'<p class="note">A resultante saiu do núcleo central: aumente A e/ou B.</p>':'')+
+    plan(A,B,a,b,H,h0,eA,eB,k*(1+u),k*(1-u),okA));
+  // 2) altura e balanços
+  const Hmin=Math.max((A-a)/3,(B-b)/3), CA=(A-a)/2, CB=(B-b)/2;
+  const okH=H>=Hmin, okCA=CA>=H/2&&CA<=2*H, okCB=CB>=H/2&&CB<=2*H;
+  h+=card('2. Altura e balanços',pill(okH&&okCA&&okCB,'Passa','Não passa'),
+    chk('H ≥ maior de (A − a)/3 e (B − b)/3 = '+n(Hmin)+' cm',n(H)+' cm',okH)+
+    chk('Balanço CA: H/2 ≤ CA ≤ 2H ('+n(H/2)+' a '+n(2*H)+')',n(CA)+' cm',okCA)+
+    chk('Balanço CB: H/2 ≤ CB ≤ 2H',n(CB)+' cm',okCB)+
+    ((okCA&&okCB)?'':'<p class="note">Com os balanços fora da faixa, o método CEB-70 não se aplica.</p>'));
+  // 3) momentos de cálculo
+  const Nd=1.4*N, edA=mx*100/N, edB=my*100/N, kd=Nd/(A*B), s1=6*edA/A, s2=6*edB/B;
+  const tA=crit=='borda'?[kd*(1+s1+s2),kd*(1-s1+s2)]:[kd*(1+s1),kd*(1-s1)];
+  const tB=crit=='borda'?[kd*(1+s1+s2),kd*(1+s1-s2)]:[kd*(1+s2),kd*(1-s2)];
+  const mom=(hi,lo,L,X,W)=>{const p1=hi-(hi-lo)/L*X;return (p1*X*X/2+(hi-p1)*X*X/3)*W};
+  const XA=CA+.15*a, XB=CB+.15*b, M1A=mom(tA[0],tA[1],A,XA,B), M1B=mom(tB[0],tB[1],B,XB,A);
+  h+=card('3. Momentos de cálculo (CEB-70)',null,
+    `<p class="eq">Nd = 1,4·Nk · seção de referência a 0,15 da face do pilar</p>`+
+    row('σ máx / σ mín de cálculo',n(kd*(1+s1+s2))+' / '+n(kd*(1-s1-s2))+' kgf/cm²')+
+    row('Direção A: σ nas pontas',n(tA[0])+' / '+n(tA[1])+' kgf/cm²')+
+    row('XA = CA + 0,15a',n(XA)+' cm')+row('M1A,d',n(M1A,0)+' kgf·cm')+
+    row('Direção B: σ nas pontas',n(tB[0])+' / '+n(tB[1])+' kgf/cm²')+
+    row('XB = CB + 0,15b',n(XB)+' cm')+row('M1B,d',n(M1B,0)+' kgf·cm'));
+  // 4) armaduras
+  const d=H-dl, fyd=fyk*10/1.15, Ab=Math.PI*(phi/10)**2/4;
+  const AsA=M1A/(.85*d*fyd), AsB=M1B/(.85*d*fyd), mA=AsA/(B/100), mB=AsB/(A/100);
+  const useMin=$('usemin').checked, minM=rho/100*100*H;
+  const rA=useMin?Math.max(mA,minM):mA, rB=useMin?Math.max(mB,minM):mB;
+  const esp=m=>Math.min(20,Math.floor(100*Ab/m/5)*5);
+  const sA=esp(rA), sB=esp(rB);
+  const efA=sA>0?Ab*100/sA:0, efB=sB>0?Ab*100/sB:0;
+  const ok4=sA>=10&&sB>=10&&(!useMin||(efA>=minM&&efB>=minM));
+  const lbl=s=>s<5?'φ'+n(phi,1)+' c/<5':'φ'+n(phi,1)+' c/'+s;
+  h+=card('4. Armaduras',pill(ok4,'Passa','Não passa'),
+    `<p class="eq">As = Md / (0,85·d·fyd) · d = H − d’ · fyd = fyk/1,15</p>`+
+    row('d / fyd',n(d,0)+' cm / '+n(fyd,0)+' kgf/cm²')+
+    row('As,A',n(AsA)+' cm² → '+n(mA)+' cm²/m')+row('As,B',n(AsB)+' cm² → '+n(mB)+' cm²/m')+(useMin?row('As,mín = ρmín·100·H',n(minM)+' cm²/m'):'')+
+    chk('Direção A (paralela a A): s ≥ 10 cm',`<span class="big">${lbl(sA)}</span>`,sA>=10)+(useMin?chk('Direção A: As,ef ≥ As,mín',n(efA)+' cm²/m',efA>=minM):'')+
+    chk('Direção B (paralela a B): s ≥ 10 cm',`<span class="big">${lbl(sB)}</span>`,sB>=10)+(useMin?chk('Direção B: As,ef ≥ As,mín',n(efB)+' cm²/m',efB>=minM):'')+
+    `<p class="note">Espaçamento arredondado para baixo em múltiplos de 5 cm, no máximo 20 cm. A armadura adotada é a maior entre a calculada e a mínima. Referência da taxa: Tabela 17.3 da NBR 6118 (0,15% para C20 a C30, CA-50), aplicada a 100 cm × H, o que é conservador para sapatas com chanfro.</p>`);
+  // 5) ancoragem
+  const fctd=Math.round(15*Math.pow(fck,2/3))/10, fbd=fctd*2.25, lb=(phi/10)/4*fyd/fbd, gancho=h0-2*dl;
+  const caso=C=>C>H?'1º caso (C > H): barra segue reta até a ancoragem':`2º caso (C ≤ H): gancho de ${n(gancho,0)} cm`;
+  h+=card('5. Ancoragem',null,
+    row('fbd (nervurada, boa aderência)',n(fbd,1)+' kgf/cm²')+row('lb = (φ/4)·(fyd/fbd)',n(lb,0)+' cm')+
+    row('Direção A, C = '+n(CA,0)+' cm',caso(CA))+row('Direção B, C = '+n(CB,0)+' cm',caso(CB)));
+  // 6) biela
+  const u0=2*(a+b), tsd=Nd/(u0*d), fcd=fck*10/1.4, av=1-fck/250, trd=.27*av*fcd, okT=tsd<=trd;
+  h+=card('6. Diagonal comprimida (biela)',pill(okT,'Passa','Não passa'),
+    `<p class="eq">τsd = Nd / (u₀·d) ≤ τRd2 = 0,27·αv·fcd · αv = 1 − fck/250</p>`+
+    row('Perímetro do pilar u₀',n(u0,0)+' cm')+row('fcd',n(fcd,1)+' kgf/cm²')+row('αv',n(av,2))+
+    chk('τsd ≤ τRd2 ('+n(trd)+' kgf/cm²)',n(tsd)+' kgf/cm²',okT)+
+    (okT?'<p class="note">Não haverá esmagamento da biela comprimida.</p>':'<p class="note">Aumente H, a seção do pilar ou o fck.</p>'));
+  $('out').innerHTML=h;
+}
+ids.concat('auto','autoA','crit').forEach(i=>$(i).addEventListener('input',calc));
+let unit='kgf';
+const setUnits=u=>{document.querySelectorAll('.uf').forEach(e=>e.textContent=u);document.querySelectorAll('.um').forEach(e=>e.textContent=u+'·m')};
+document.querySelectorAll('input[name=un]').forEach(r=>r.addEventListener('change',()=>{
+  const nu=r.value; if(nu===unit)return;
+  const f=nu==='tf'?1/1000:1000;
+  ['N','Mx','My'].forEach(i=>{const x=parseFloat($(i).value);if(isFinite(x))$(i).value=+(x*f).toPrecision(10)});
+  unit=nu;setUnits(unit);calc();}));
+calc();
+
+// ---- empreendimentos e sapatas salvas (salvamento automático) ----
+const SAVE_IDS=ids.concat('auto','autoA','crit','usemin');
+const msg=t=>{$('msg').textContent=t};
+const esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const clone=o=>JSON.parse(JSON.stringify(o));
+const hhmm=()=>new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+const errTxt=e=>'Erro ao salvar: '+((e&&(e.code||e.message))||e);
+let store=null,docs={},curE='',curS='',timer=0,first=true;const armed={};
+const mkLocal=()=>{const K='sapatas_v2';let m={},cb=()=>{};try{m=JSON.parse(localStorage.getItem(K)||'{}')}catch(e){}
+  const save=()=>{try{localStorage.setItem(K,JSON.stringify(m))}catch(e){}};
+  return{where:'neste navegador',listen(f){cb=f;f(clone(m))},async put(id,d){m[id]=clone(d);save();cb(clone(m))},async del(id){delete m[id];save();cb(clone(m))}}};
+const snapshotForm=()=>{const v={};SAVE_IDS.forEach(i=>{const e=$(i);v[i]=e.type==='checkbox'?e.checked:e.value});v.unit=unit;return v};
+const loadForm=v=>{
+  const u=v.unit||'kgf';unit=u;document.querySelectorAll('input[name=un]').forEach(r=>{r.checked=r.value===u});setUnits(u);
+  SAVE_IDS.forEach(i=>{if(!(i in v))return;const e=$(i);if(e.type==='checkbox')e.checked=!!v[i];else e.value=v[i]});calc()};
+const emps=()=>Object.keys(docs).filter(k=>docs[k].kind==='emp').sort((a,b)=>docs[a].name.localeCompare(docs[b].name,'pt-BR'));
+const saps=()=>Object.keys(docs).filter(k=>docs[k].kind==='sap'&&docs[k].emp===curE).sort((a,b)=>docs[a].name.localeCompare(docs[b].name,'pt-BR',{numeric:true}));
+const render=()=>{
+  const ks=emps();if(!ks.includes(curE))curE=ks[0]||'';
+  $('empSel').innerHTML=ks.length?ks.map(k=>`<option value="${k}"${k===curE?' selected':''}>${esc(docs[k].name)}</option>`).join(''):'<option value="">(nenhum empreendimento)</option>';
+  if(curS&&!(docs[curS]&&docs[curS].emp===curE))curS='';
+  $('sapSel').innerHTML='<option value="">— Nova sapata —</option>'+saps().map(k=>`<option value="${k}"${k===curS?' selected':''}>${esc(docs[k].name)}</option>`).join('')};
+const flush=async()=>{
+  clearTimeout(timer);timer=0;
+  if(!store||!curS||!docs[curS])return;
+  const d={...docs[curS],v:snapshotForm(),t:Date.now()};docs[curS]=d;
+  try{await store.put(curS,d);msg('Salvo automaticamente às '+hhmm()+' ('+store.where+').')}catch(e){msg(errTxt(e))}};
+const later=()=>{if(!curS)return;clearTimeout(timer);timer=setTimeout(flush,700)};
+SAVE_IDS.forEach(i=>$(i).addEventListener('input',later));
+document.querySelectorAll('input[name=un]').forEach(r=>r.addEventListener('change',later));
+$('empSel').addEventListener('change',async()=>{await flush();curE=$('empSel').value;curS='';render();$('sapName').value='';msg('Escolha uma sapata ou crie uma nova.')});
+$('sapSel').addEventListener('change',async()=>{
+  const k=$('sapSel').value;await flush();
+  if(!k){curS='';$('sapName').value='';msg('Nova sapata: dê um nome e clique em Salvar. Depois disso, tudo é salvo sozinho.');return}
+  curS=k;$('sapName').value=docs[k].name;loadForm(docs[k].v);msg('Sapata “'+docs[k].name+'” carregada.')});
+$('empAdd').addEventListener('click',async()=>{
+  if(!store)return msg('Aguarde, carregando…');
+  const nm=$('empName').value.trim();if(!nm)return msg('Digite o nome do empreendimento.');
+  await flush();const k='e'+Date.now().toString(36),d={kind:'emp',name:nm};
+  try{await store.put(k,d);docs[k]=d;curE=k;curS='';$('empName').value='';$('sapName').value='';render();msg('Empreendimento criado. Agora dê um nome à sapata e clique em Salvar.')}catch(e){msg(errTxt(e))}});
+$('sapSave').addEventListener('click',async()=>{
+  if(!store)return msg('Aguarde, carregando…');
+  if(!curE)return msg('Crie ou selecione um empreendimento primeiro.');
+  const nm=$('sapName').value.trim();if(!nm)return msg('Digite o nome da sapata.');
+  clearTimeout(timer);
+  const k=curS||'s'+Date.now().toString(36)+Math.random().toString(36).slice(2,5);
+  const d={kind:'sap',emp:curE,name:nm,v:snapshotForm(),t:Date.now()};
+  try{await store.put(k,d);docs[k]=d;curS=k;render();msg('Sapata “'+nm+'” salva em '+docs[curE].name+'. Agora tudo é salvo automaticamente.')}catch(e){msg(errTxt(e))}});
+const arm=(btn,fn)=>{const label=btn.textContent;btn.addEventListener('click',()=>{
+  if(armed[btn.id]){clearTimeout(armed[btn.id]);armed[btn.id]=0;btn.textContent=label;fn();return}
+  btn.textContent='Confirmar?';armed[btn.id]=setTimeout(()=>{armed[btn.id]=0;btn.textContent=label},3000)})};
+arm($('sapDel'),async()=>{
+  if(!store||!curS)return msg('Selecione uma sapata salva.');
+  clearTimeout(timer);const k=curS,nm=docs[k].name;
+  try{await store.del(k);delete docs[k];curS='';$('sapName').value='';render();msg('Sapata “'+nm+'” excluída.')}catch(e){msg(errTxt(e))}});
+arm($('empDel'),async()=>{
+  if(!store||!curE)return msg('Selecione um empreendimento.');
+  clearTimeout(timer);const k=curE,nm=docs[k].name;
+  try{for(const s of saps()){await store.del(s);delete docs[s]}await store.del(k);delete docs[k];curE='';curS='';render();msg('Empreendimento “'+nm+'” e suas sapatas foram excluídos.')}catch(e){msg(errTxt(e))}});
+(async()=>{
+  const st=mkLocal();
+  store=st;
+  st.listen(o=>{docs=o;render();
+    if(first){first=false;msg(emps().length?'Dados salvos '+st.where+'. Escolha um empreendimento e uma sapata.':'Crie um empreendimento para começar (dados salvos '+st.where+').')}});
+})();
+</script>
+</body>
+</html>
